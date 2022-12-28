@@ -15,22 +15,22 @@ CURR = (83, 83, 83)
 
 FPS = 60
 
-RUN1 = pygame.image.load(os.path.join('Assets', 'run-1.png'))
-RUN2 = pygame.image.load(os.path.join('Assets', 'run-2.png'))
-DUCK1 = pygame.image.load(os.path.join('Assets', 'duck-1.png'))
-DUCK2 = pygame.image.load(os.path.join('Assets', 'duck-2.png'))
-DEAD = pygame.image.load(os.path.join('Assets', 'dead.png'))
-BIRD1 = pygame.image.load(os.path.join('Assets', 'bird-1.png'))
-BIRD2 = pygame.image.load(os.path.join('Assets', 'bird-2.png'))
-SMALL1 = pygame.image.load(os.path.join('Assets', 'small-1.png'))
-SMALL2 = pygame.image.load(os.path.join('Assets', 'small-2.png'))
-SMALL3 = pygame.image.load(os.path.join('Assets', 'small-3.png'))
-LARGE1 = pygame.image.load(os.path.join('Assets', 'large-1.png'))
-LARGE2 = pygame.image.load(os.path.join('Assets', 'large-2.png'))
-LARGE3 = pygame.image.load(os.path.join('Assets', 'large-3.png'))
-CLOUD = pygame.image.load(os.path.join('Assets', 'cloud.png'))
-RESTART = pygame.image.load(os.path.join('Assets', 'restart.png'))
-GROUND = pygame.image.load(os.path.join('Assets', 'ground.png'))
+RUN1 = pygame.image.load(os.path.join('assets', 'run-1.png'))
+RUN2 = pygame.image.load(os.path.join('assets', 'run-2.png'))
+DUCK1 = pygame.image.load(os.path.join('assets', 'duck-1.png'))
+DUCK2 = pygame.image.load(os.path.join('assets', 'duck-2.png'))
+DEAD = pygame.image.load(os.path.join('assets', 'dead.png'))
+BIRD1 = pygame.image.load(os.path.join('assets', 'bird-1.png'))
+BIRD2 = pygame.image.load(os.path.join('assets', 'bird-2.png'))
+SMALL1 = pygame.image.load(os.path.join('assets', 'small-1.png'))
+SMALL2 = pygame.image.load(os.path.join('assets', 'small-2.png'))
+SMALL3 = pygame.image.load(os.path.join('assets', 'small-3.png'))
+LARGE1 = pygame.image.load(os.path.join('assets', 'large-1.png'))
+LARGE2 = pygame.image.load(os.path.join('assets', 'large-2.png'))
+LARGE3 = pygame.image.load(os.path.join('assets', 'large-3.png'))
+CLOUD = pygame.image.load(os.path.join('assets', 'cloud.png'))
+RESTART = pygame.image.load(os.path.join('assets', 'restart.png'))
+GROUND = pygame.image.load(os.path.join('assets', 'ground.png'))
 
 RUN1 = pygame.transform.scale(RUN1, (RUN1.get_width() / 2, RUN1.get_height() / 2))
 RUN2 = pygame.transform.scale(RUN2, (RUN2.get_width() / 2, RUN2.get_height() / 2))
@@ -53,11 +53,11 @@ LARGE1 = pygame.transform.scale(LARGE1, (LARGE1.get_width() / 2, LARGE1.get_heig
 LARGE2 = pygame.transform.scale(LARGE2, (LARGE2.get_width() / 2, LARGE2.get_height() / 2))
 LARGE3 = pygame.transform.scale(LARGE3, (LARGE3.get_width() / 2, LARGE3.get_height() / 2))
 
-JUMP_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'jump.wav'))
-POINT_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'point.wav'))
+JUMP_SOUND = pygame.mixer.Sound(os.path.join('assets', 'jump.wav'))
+POINT_SOUND = pygame.mixer.Sound(os.path.join('assets', 'point.wav'))
 DIE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'die.wav'))
 
-FONT = pygame.font.Font(os.path.join('Assets', 'PressStart2P-Regular.ttf'), 12)
+FONT = pygame.font.Font(os.path.join('assets', 'PressStart2P-Regular.ttf'), 12)
 
 
 def draw_window(dino, dino_coords, floor, floor_coords, obst, clouds):
