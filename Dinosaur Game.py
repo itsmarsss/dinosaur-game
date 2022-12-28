@@ -60,6 +60,7 @@ def draw_window(dino, dino_coords, floor, floor_coords, cacti):
 
 
 def main():
+    multiplier = 1
     high_score = 0
     curr_score = 0
     grav_acc = 1.6
@@ -145,17 +146,21 @@ def main():
         if curr_score != 0 and curr_score % 100 == 0:
             pygame.mixer.Sound.play(POINT_SOUND)
             pygame.mixer.music.stop()
+            if multiplier != 2:
+                multiplier = multiplier + 0.1
 
         pygame.display.set_icon(dino_sprite)
 
         for key, value in cacti.items():
-            value.x = value.x - 5
+            value.x = value.x - 5*multiplier
 
-        floor_coords.x = floor_coords.x - 5
-        if floor_coords.x == -1200:
+        for i in list(cacti.keys()):
+            if cacti[i].x <= -50:
+                del cacti[i]
+
+        floor_coords.x = floor_coords.x - 5*multiplier
+        if floor_coords.x <= -1200:
             floor_coords.x = 0
-            if floor_coords.x <= -50:
-                del cacti[key]
 
         draw_window(dino_sprite, dino_info, GROUND, floor_coords, cacti)
 
