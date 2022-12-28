@@ -1,4 +1,6 @@
 import os
+from random import random
+
 import pygame
 
 pygame.init()
@@ -30,6 +32,8 @@ GROUND = pygame.image.load(os.path.join('Assets', 'ground.png'))
 
 RUN1 = pygame.transform.scale(RUN1, (RUN1.get_width() / 2, RUN1.get_height() / 2))
 RUN2 = pygame.transform.scale(RUN2, (RUN2.get_width() / 2, RUN2.get_height() / 2))
+DUCK1 = pygame.transform.scale(DUCK1, (DUCK1.get_width() / 2, DUCK1.get_height() / 2))
+DUCK2 = pygame.transform.scale(DUCK2, (DUCK2.get_width() / 2, DUCK2.get_height() / 2))
 GROUND = pygame.transform.scale(GROUND, (GROUND.get_width() / 2, GROUND.get_height() / 2))
 
 JUMP_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'jump.wav'))
@@ -45,14 +49,26 @@ def draw_window(dino, dino_coords, floor, floor_coords, cacti):
     pygame.display.update()
 
 
+def generate_cacti():
+    size = random.randint(0,1)
+    cact = random.randint(1,3)
+
+
 def main():
+    high_score = 0
+    curr_score = 0
     grav_acc = 1.2
     dino_vel = 0
     time = 0
+    cacti = []
     dino_count = 0
-    floor_count = 0
+    point_count = 0
+    cacti_count = 0
     dino_coords = pygame.Rect(20, 145, RUN1.get_width(), RUN1.get_height())
+    dino_duck_coords = pygame.Rect(20, 160, DUCK1.get_width(), DUCK1.get_height())
     floor_coords = pygame.Rect(0, 180, GROUND.get_width(), GROUND.get_height())
+    cacti_small_coords = pygame.Rect(650, 170, GROUND.get_width(), GROUND.get_height())
+    cacti_small_coords = pygame.Rect(650, 170, GROUND.get_width(), GROUND.get_height())
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -65,6 +81,7 @@ def main():
         if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]:
             if dino_vel == 0:
                 pygame.mixer.Sound.play(JUMP_SOUND)
+                pygame.mixer.music.stop()
                 dino_vel = -12
 
         if dino_vel != 0:
@@ -78,16 +95,39 @@ def main():
                 time = time + 0.5
 
         dino_sprite = RUN1
+        dino_info = dino_coords
+        if keys_pressed[pygame.K_DOWN]:
+            dino_sprite = DUCK2
+            dino_info = dino_duck_coords
+
         dino_count = dino_count + 1
         if dino_count <= FPS / 10:
             dino_sprite = RUN2
+            if keys_pressed[pygame.K_DOWN]:
+                dino_sprite = DUCK2
         dino_count = dino_count % (FPS / 5)
+
+        cacti_count = cacti_count + 1
+        if cacti_count == 120:
+            cacti.append[generate_cacti()]
+            cacti_count = 0
+
+        point_count = point_count + 1
+        if point_count == 6:
+            curr_score = curr_score + 1;
+            point_count = 0
+
+        if curr_score != 0 and curr_score % 100 == 0:
+            pygame.mixer.Sound.play(POINT_SOUND)
+            pygame.mixer.music.stop()
+
+        pygame.display.set_icon(dino_sprite)
 
         floor_coords.x = floor_coords.x - 5
         if floor_coords.x == -1200:
             floor_coords.x = 0
 
-        draw_window(dino_sprite, dino_coords, GROUND, floor_coords, SMALL1)
+        draw_window(dino_sprite, dino_info, GROUND, floor_coords, SMALL1)
 
     pygame.quit()
 
