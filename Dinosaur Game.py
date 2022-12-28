@@ -116,30 +116,48 @@ def getObstacle():
     cacti = Label(gameCanvas, image=cacti_image)
     cacti.image = cacti_image
     if size == 0:
-        cacti.place(x=1100, y=350)
+        cacti.place(x=1100, y=390)
     else:
-        cacti.place(x=1100, y=300)
+        cacti.place(x=1100, y=375)
 
     return cacti
 
 
 def generate_obstacle():
-    counter = 0
-    cacti = [getObstacle()]
-    x_coords = [1100]
+    counter = 100
+    cacti = []
+    x_coords = []
     while True:
-        counter = counter + 1
-        if counter == 1000:
+        if counter == 100:
             counter = 0
-            obstacle = getObstacle()
+            cacti.append(getObstacle())
+            x_coords.append(1100)
 
-        time.sleep(0.0001)
-        for i in range(0, len(cacti)):
+        for i, value in enumerate(cacti):
             x_coords[i] = x_coords[i]-10
             cacti[i].place(x=x_coords[i])
+        counter = counter + 1
+        time.sleep(0.0001)
 
 
 gameObstacle = Thread(target=generate_obstacle)
 gameObstacle.start()
+
+
+def run_dino():
+    global dino
+    num = 0
+    while True:
+        time.sleep(0.1)
+        num = (num + 1) % 2
+        #dino_image = dino_image.resize((44, 47), Image.ANTIALIAS)
+        dino_image = ImageTk.PhotoImage(file=(os.getcwd() + f'/assets/run-{str(num+1)}.png'))
+        dino = Label(gameCanvas, image=dino_image)
+        dino.image = dino_image
+        dino.place(x=50, y=360)
+
+
+runDino = Thread(target=run_dino)
+runDino.start()
 
 gameWindow.mainloop()
