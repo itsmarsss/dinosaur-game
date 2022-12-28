@@ -41,6 +41,9 @@ DEAD = pygame.transform.scale(DEAD, (DEAD.get_width() / 2, DEAD.get_height() / 2
 GROUND = pygame.transform.scale(GROUND, (GROUND.get_width() / 2, GROUND.get_height() / 2))
 RESTART = pygame.transform.scale(RESTART, (RESTART.get_width() / 2, RESTART.get_height() / 2))
 
+BIRD1 = pygame.transform.scale(BIRD1, (BIRD1.get_width() / 2, BIRD1.get_height() / 2))
+BIRD2 = pygame.transform.scale(BIRD2, (BIRD2.get_width() / 2, BIRD2.get_height() / 2))
+
 SMALL1 = pygame.transform.scale(SMALL1, (SMALL1.get_width() / 2, SMALL1.get_height() / 2))
 SMALL2 = pygame.transform.scale(SMALL2, (SMALL2.get_width() / 2, SMALL2.get_height() / 2))
 SMALL3 = pygame.transform.scale(SMALL3, (SMALL3.get_width() / 2, SMALL3.get_height() / 2))
@@ -56,8 +59,8 @@ DIE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'die.wav'))
 FONT = pygame.font.Font(os.path.join('Assets', 'PressStart2P-Regular.ttf'), 12)
 
 
-def draw_window(dino, dino_coords, floor, floor_coords, cacti):
-    for key, value in cacti.items():
+def draw_window(dino, dino_coords, floor, floor_coords, obst):
+    for key, value in obst.items():
         WIN.blit(key, (value.x, value.y))
     WIN.blit(dino, (dino_coords.x, dino_coords.y))
     WIN.blit(floor, (floor_coords.x, floor_coords.y))
@@ -72,13 +75,14 @@ def main():
     grav_acc = 1.6
     dino_vel = 0
     time = 0
-    cacti = {}
+    obst = {}
     dino_count = 0
     point_count = 0
-    cacti_count = 0
+    obst_count = 0
     dino_coords = pygame.Rect(20, 145, RUN1.get_width(), RUN1.get_height())
     dino_duck_coords = pygame.Rect(20, 160, DUCK1.get_width(), DUCK1.get_height())
     floor_coords = pygame.Rect(0, 180, GROUND.get_width(), GROUND.get_height())
+    bird_coords = pygame.Rect(650, 90, BIRD1.get_width(), BIRD1.get_height())
     cacti_small1_coords = pygame.Rect(650, 155, SMALL1.get_width(), SMALL1.get_height())
     cacti_small2_coords = pygame.Rect(650, 155, SMALL2.get_width(), SMALL2.get_height())
     cacti_small3_coords = pygame.Rect(650, 155, SMALL3.get_width(), SMALL3.get_height())
@@ -97,7 +101,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONUP:
                 x, y = pygame.mouse.get_pos()
                 if restart_coords.x < x and restart_coords.x + restart_coords.w > x and restart_coords.y < y and restart_coords.h + restart_coords.y > y:
-                    cacti.clear()
+                    obst.clear()
                     multiplier = 1
                     high_score = curr_score
                     curr_score = 0
@@ -135,25 +139,29 @@ def main():
                     dino_sprite = DUCK2
             dino_count = dino_count % (FPS / 5)
 
-            cacti_count = cacti_count + 1
-            if cacti_count >= random.randint(50, 100):
-                size = random.randint(0, 1)
-                cact = random.randint(1, 3)
-                if size == 0:
-                    if cact == 1:
-                        cacti[copy.copy(SMALL1)] = copy.copy(cacti_small1_coords)
-                    elif cact == 2:
-                        cacti[copy.copy(SMALL2)] = copy.copy(cacti_small2_coords)
-                    else:
-                        cacti[copy.copy(SMALL3)] = copy.copy(cacti_small3_coords)
+            obst_count = obst_count + 1
+            if obst_count >= random.randint(50, 100):
+                type = random.randint(0, 1)
+                if type == 0:
+                    obst[copy.copy(BIRD1)] = copy.copy(bird_coords)
                 else:
-                    if cact == 1:
-                        cacti[copy.copy(LARGE1)] = copy.copy(cacti_large1_coords)
-                    elif cact == 2:
-                        cacti[copy.copy(LARGE2)] = copy.copy(cacti_large2_coords)
+                    size = random.randint(0, 1)
+                    cact = random.randint(1, 3)
+                    if size == 0:
+                        if cact == 1:
+                            obst[copy.copy(SMALL1)] = copy.copy(cacti_small1_coords)
+                        elif cact == 2:
+                            obst[copy.copy(SMALL2)] = copy.copy(cacti_small2_coords)
+                        else:
+                            obst[copy.copy(SMALL3)] = copy.copy(cacti_small3_coords)
                     else:
-                        cacti[copy.copy(LARGE3)] = copy.copy(cacti_large3_coords)
-                cacti_count = 0
+                        if cact == 1:
+                            obst[copy.copy(LARGE1)] = copy.copy(cacti_large1_coords)
+                        elif cact == 2:
+                            obst[copy.copy(LARGE2)] = copy.copy(cacti_large2_coords)
+                        else:
+                            obst[copy.copy(LARGE3)] = copy.copy(cacti_large3_coords)
+                obst_count = 0
 
             point_count = point_count + 1
             if point_count == 6:
@@ -166,12 +174,12 @@ def main():
 
             pygame.display.set_icon(dino_sprite)
 
-            for key, value in cacti.items():
+            for key, value in obst.items():
                 value.x = value.x - 5
 
-            for i in list(cacti.keys()):
-                if cacti[i].x <= -100:
-                    del cacti[i]
+            for i in list(obst.keys()):
+                if obst[i].x <= -100:
+                    del obst[i]
 
             floor_coords.x = floor_coords.x - 5
             if floor_coords.x <= -1200:
@@ -179,7 +187,7 @@ def main():
 
             WIN.fill(WHITE)
 
-            for key, value in cacti.items():
+            for key, value in obst.items():
                 if dino_info.x + 10 < value.x + value.w and dino_info.x + 10 + dino_info.w - 20 > value.x and dino_info.y + 10 < value.y + value.h and dino_info.h - 20 + dino_info.y + 10 > value.y:
                     pygame.mixer.Sound.play(DIE_SOUND)
                     pygame.mixer.music.stop()
@@ -201,7 +209,7 @@ def main():
             WIN.blit(curr_score_text, curr_rect)
             WIN.blit(high_score_text, high_rect)
 
-            draw_window(dino_sprite, dino_info, GROUND, floor_coords, cacti)
+            draw_window(dino_sprite, dino_info, GROUND, floor_coords, obst)
 
     pygame.quit()
 
