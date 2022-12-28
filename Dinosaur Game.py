@@ -1,6 +1,7 @@
 import os
-
 import pygame
+
+pygame.init()
 
 WIDTH, HEIGHT = 600, 200
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -31,6 +32,10 @@ RUN1 = pygame.transform.scale(RUN1, (RUN1.get_width() / 2, RUN1.get_height() / 2
 RUN2 = pygame.transform.scale(RUN2, (RUN2.get_width() / 2, RUN2.get_height() / 2))
 GROUND = pygame.transform.scale(GROUND, (GROUND.get_width() / 2, GROUND.get_height() / 2))
 
+JUMP_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'jump.wav'))
+POINT_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'point.wav'))
+DIE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'die.wav'))
+
 
 def draw_window(dino, dino_coords, floor, floor_coords, cacti):
     WIN.fill(WHITE)
@@ -41,7 +46,7 @@ def draw_window(dino, dino_coords, floor, floor_coords, cacti):
 
 
 def main():
-    grav_acc = 1
+    grav_acc = 1.2
     dino_vel = 0
     time = 0
     dino_count = 0
@@ -57,8 +62,9 @@ def main():
                 run = False
 
         keys_pressed = pygame.key.get_pressed()
-        if keys_pressed[pygame.K_UP]:
+        if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]:
             if dino_vel == 0:
+                pygame.mixer.Sound.play(JUMP_SOUND)
                 dino_vel = -12
 
         if dino_vel != 0:
