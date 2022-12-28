@@ -1,5 +1,6 @@
 import asyncio
 import time
+from random import randint
 from threading import Thread
 from tkinter import *
 from PIL import ImageTk, Image
@@ -24,10 +25,6 @@ async def dino_jump():
 
 
 async def dino_duck():
-    pass
-
-
-async def generate_obstacle():
     pass
 
 
@@ -92,11 +89,11 @@ def start_floor():
     floor_2.image = floor_image_2
     floor_2.place(x=x_coord_2, y=450)
     while True:
-        asyncio.sleep(0.001)
-        x_coord = x_coord - 1
+        time.sleep(0.0001)
+        x_coord = x_coord - 10
         if x_coord == -1200:
             x_coord = 0
-        x_coord_2 = x_coord_2 - 1
+        x_coord_2 = x_coord_2 - 10
         if x_coord_2 == 0:
             x_coord_2 = 1200
         floor.place(x=x_coord, y=450)
@@ -105,5 +102,44 @@ def start_floor():
 
 gameFloor = Thread(target=start_floor)
 gameFloor.start()
+
+
+def getObstacle():
+    size = randint(0, 1)
+    cacti = randint(1, 3)
+    if size == 0:
+        cacti_image = Image.open((os.getcwd() + f'/assets/small-{cacti}.png'))
+    else:
+        cacti_image = Image.open((os.getcwd() + f'/assets/large-{cacti}.png'))
+
+    cacti_image = ImageTk.PhotoImage(cacti_image)
+    cacti = Label(gameCanvas, image=cacti_image)
+    cacti.image = cacti_image
+    if size == 0:
+        cacti.place(x=1100, y=350)
+    else:
+        cacti.place(x=1100, y=300)
+
+    return cacti
+
+
+def generate_obstacle():
+    counter = 0
+    cacti = [getObstacle()]
+    x_coords = [1100]
+    while True:
+        counter = counter + 1
+        if counter == 1000:
+            counter = 0
+            obstacle = getObstacle()
+
+        time.sleep(0.0001)
+        for i in range(0, len(cacti)):
+            x_coords[i] = x_coords[i]-10
+            cacti[i].place(x=x_coords[i])
+
+
+gameObstacle = Thread(target=generate_obstacle)
+gameObstacle.start()
 
 gameWindow.mainloop()
