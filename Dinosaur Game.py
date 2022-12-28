@@ -39,6 +39,7 @@ DUCK2 = pygame.transform.scale(DUCK2, (DUCK2.get_width() / 2, DUCK2.get_height()
 DEAD = pygame.transform.scale(DEAD, (DEAD.get_width() / 2, DEAD.get_height() / 2))
 
 GROUND = pygame.transform.scale(GROUND, (GROUND.get_width() / 2, GROUND.get_height() / 2))
+CLOUD = pygame.transform.scale(CLOUD, (CLOUD.get_width() / 2, CLOUD.get_height() / 2))
 RESTART = pygame.transform.scale(RESTART, (RESTART.get_width() / 2, RESTART.get_height() / 2))
 
 BIRD1 = pygame.transform.scale(BIRD1, (BIRD1.get_width() / 2, BIRD1.get_height() / 2))
@@ -59,8 +60,10 @@ DIE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'die.wav'))
 FONT = pygame.font.Font(os.path.join('Assets', 'PressStart2P-Regular.ttf'), 12)
 
 
-def draw_window(dino, dino_coords, floor, floor_coords, obst):
+def draw_window(dino, dino_coords, floor, floor_coords, obst, clouds):
     for key, value in obst.items():
+        WIN.blit(key, (value.x, value.y))
+    for key, value in clouds.items():
         WIN.blit(key, (value.x, value.y))
     WIN.blit(dino, (dino_coords.x, dino_coords.y))
     WIN.blit(floor, (floor_coords.x, floor_coords.y))
@@ -76,9 +79,11 @@ def main():
     dino_vel = 0
     time = 0
     obst = {}
+    clouds = {}
     dino_count = 0
     point_count = 0
     obst_count = 0
+    cloud_count = 0
     dino_coords = pygame.Rect(20, 145, RUN1.get_width(), RUN1.get_height())
     dino_duck_coords = pygame.Rect(20, 160, DUCK1.get_width(), DUCK1.get_height())
     floor_coords = pygame.Rect(0, 180, GROUND.get_width(), GROUND.get_height())
@@ -103,7 +108,6 @@ def main():
                 x, y = pygame.mouse.get_pos()
                 if restart_coords.x < x and restart_coords.x + restart_coords.w > x and restart_coords.y < y and restart_coords.h + restart_coords.y > y:
                     obst.clear()
-                    multiplier = 1
                     high_score = curr_score
                     curr_score = 0
                     dead = False
@@ -139,6 +143,12 @@ def main():
                 if keys_pressed[pygame.K_DOWN] and dino_coords.y == 145:
                     dino_sprite = DUCK2
             dino_count = dino_count % (FPS / 5)
+
+            cloud_count = cloud_count + 1
+            if cloud_count >= random.randint(100, 150):
+                cloud_box = pygame.Rect(650, random.randint(30, 50), CLOUD.get_width(), CLOUD.get_height())
+                clouds[copy.copy(CLOUD)] = cloud_box
+                cloud_count = 0
 
             obst_count = obst_count + 1
             if obst_count >= random.randint(50, 100):
@@ -178,6 +188,13 @@ def main():
                 pygame.mixer.music.stop()
 
             pygame.display.set_icon(dino_sprite)
+
+            for key, value in clouds.items():
+                value.x = value.x - 2
+
+            for i in list(clouds.keys()):
+                if clouds[i].x <= -100:
+                    del clouds[i]
 
             for key, value in obst.items():
                 value.x = value.x - 5
@@ -225,7 +242,7 @@ def main():
             WIN.blit(curr_score_text, curr_rect)
             WIN.blit(high_score_text, high_rect)
 
-            draw_window(dino_sprite, dino_info, GROUND, floor_coords, obst)
+            draw_window(dino_sprite, dino_info, GROUND, floor_coords, obst, clouds)
 
     pygame.quit()
 
