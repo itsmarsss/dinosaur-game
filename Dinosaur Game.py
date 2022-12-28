@@ -10,6 +10,8 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Dinosaur Game")
 
 WHITE = (255, 255, 255)
+HIGH = (117, 117, 117)
+CURR = (83, 83, 83)
 
 FPS = 60
 
@@ -51,6 +53,8 @@ JUMP_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'jump.wav'))
 POINT_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'point.wav'))
 DIE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'die.wav'))
 
+FONT = pygame.font.Font(os.path.join('Assets', 'PressStart2P-Regular.ttf'), 12)
+
 
 def draw_window(dino, dino_coords, floor, floor_coords, cacti):
     for key, value in cacti.items():
@@ -63,7 +67,6 @@ def draw_window(dino, dino_coords, floor, floor_coords, cacti):
 
 def main():
     dead = False
-    multiplier = 1
     high_score = 0
     curr_score = 0
     grav_acc = 1.6
@@ -82,7 +85,8 @@ def main():
     cacti_large1_coords = pygame.Rect(650, 145, LARGE1.get_width(), LARGE1.get_height())
     cacti_large2_coords = pygame.Rect(650, 145, LARGE2.get_width(), LARGE2.get_height())
     cacti_large3_coords = pygame.Rect(650, 145, LARGE3.get_width(), LARGE3.get_height())
-    restart_coords = pygame.Rect(300-RESTART.get_width()/2, 100-RESTART.get_width()/2, RESTART.get_width(), RESTART.get_height())
+    restart_coords = pygame.Rect(300 - RESTART.get_width() / 2, 100 - RESTART.get_width() / 2, RESTART.get_width(),
+                                 RESTART.get_height())
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -159,31 +163,43 @@ def main():
             if curr_score != 0 and curr_score % 100 == 0:
                 pygame.mixer.Sound.play(POINT_SOUND)
                 pygame.mixer.music.stop()
-                if multiplier != 1.05:
-                    multiplier = multiplier + 0.005
 
             pygame.display.set_icon(dino_sprite)
 
             for key, value in cacti.items():
-                value.x = value.x - (5*multiplier)
+                value.x = value.x - 5
 
             for i in list(cacti.keys()):
                 if cacti[i].x <= -100:
                     del cacti[i]
 
-            floor_coords.x = floor_coords.x - (5*multiplier)
+            floor_coords.x = floor_coords.x - 5
             if floor_coords.x <= -1200:
                 floor_coords.x = 0
 
             WIN.fill(WHITE)
 
             for key, value in cacti.items():
-                if dino_info.x+10 < value.x + value.w and dino_info.x+10 + dino_info.w-20 > value.x and dino_info.y+10 < value.y + value.h and dino_info.h-20 + dino_info.y+10 > value.y:
+                if dino_info.x + 10 < value.x + value.w and dino_info.x + 10 + dino_info.w - 20 > value.x and dino_info.y + 10 < value.y + value.h and dino_info.h - 20 + dino_info.y + 10 > value.y:
                     pygame.mixer.Sound.play(DIE_SOUND)
                     pygame.mixer.music.stop()
+                    game_over_text = FONT.render('G A M E  O V E R', True, CURR)
+                    game_over_rect = game_over_text.get_rect()
+                    game_over_rect.center = (300, 70)
+                    WIN.blit(game_over_text, game_over_rect)
                     WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
                     dino_sprite = DEAD
                     dead = True
+
+            high_score_text = FONT.render(f'HI {str(high_score).zfill(6)}', True, HIGH)
+            curr_score_text = FONT.render(f'{str(curr_score).zfill(6)}', True, CURR)
+            high_rect = high_score_text.get_rect()
+            curr_rect = curr_score_text.get_rect()
+            curr_rect.topright = (590, 10)
+            high_rect.topright = (500, 10)
+
+            WIN.blit(curr_score_text, curr_rect)
+            WIN.blit(high_score_text, high_rect)
 
             draw_window(dino_sprite, dino_info, GROUND, floor_coords, cacti)
 
