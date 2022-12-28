@@ -82,7 +82,8 @@ def main():
     dino_coords = pygame.Rect(20, 145, RUN1.get_width(), RUN1.get_height())
     dino_duck_coords = pygame.Rect(20, 160, DUCK1.get_width(), DUCK1.get_height())
     floor_coords = pygame.Rect(0, 180, GROUND.get_width(), GROUND.get_height())
-    bird_coords = pygame.Rect(650, 90, BIRD1.get_width(), BIRD1.get_height())
+    bird_coords = pygame.Rect(650, 145, BIRD1.get_width(), BIRD1.get_height())
+    bird_low_coords = pygame.Rect(650, 125, BIRD1.get_width(), BIRD1.get_height())
     cacti_small1_coords = pygame.Rect(650, 155, SMALL1.get_width(), SMALL1.get_height())
     cacti_small2_coords = pygame.Rect(650, 155, SMALL2.get_width(), SMALL2.get_height())
     cacti_small3_coords = pygame.Rect(650, 155, SMALL3.get_width(), SMALL3.get_height())
@@ -141,9 +142,13 @@ def main():
 
             obst_count = obst_count + 1
             if obst_count >= random.randint(50, 100):
-                type = random.randint(0, 1)
-                if type == 0:
-                    obst[copy.copy(BIRD1)] = copy.copy(bird_coords)
+                type = random.randint(0, 10)
+                if type <= 3:
+                    height = random.randint(0, 1)
+                    if height == 0:
+                        obst[copy.copy(BIRD1)] = copy.copy(bird_low_coords)
+                    else:
+                        obst[copy.copy(BIRD2)] = copy.copy(bird_coords)
                 else:
                     size = random.randint(0, 1)
                     cact = random.randint(1, 3)
@@ -198,6 +203,17 @@ def main():
                     WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
                     dino_sprite = DEAD
                     dead = True
+
+            if curr_score > 100000:
+                pygame.mixer.Sound.play(DIE_SOUND)
+                pygame.mixer.music.stop()
+                game_over_text = FONT.render('Y O U \' R E  T O O  G O O D', True, CURR)
+                game_over_rect = game_over_text.get_rect()
+                game_over_rect.center = (300, 70)
+                WIN.blit(game_over_text, game_over_rect)
+                WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
+                dino_sprite = DEAD
+                dead = True
 
             high_score_text = FONT.render(f'HI {str(high_score).zfill(6)}', True, HIGH)
             curr_score_text = FONT.render(f'{str(curr_score).zfill(6)}', True, CURR)
