@@ -137,18 +137,18 @@ def main():
                 cact = random.randint(1, 3)
                 if size == 0:
                     if cact == 1:
-                        cacti[key] = copy.copy(cacti_small1_coords)
+                        cacti[copy.copy(SMALL1)] = copy.copy(cacti_small1_coords)
                     elif cact == 2:
-                        cacti[key] = copy.copy(cacti_small2_coords)
+                        cacti[copy.copy(SMALL2)] = copy.copy(cacti_small2_coords)
                     else:
-                        cacti[key] = copy.copy(cacti_small3_coords)
+                        cacti[copy.copy(SMALL3)] = copy.copy(cacti_small3_coords)
                 else:
                     if cact == 1:
-                        cacti[key] = copy.copy(cacti_large1_coords)
+                        cacti[copy.copy(LARGE1)] = copy.copy(cacti_large1_coords)
                     elif cact == 2:
-                        cacti[key] = copy.copy(cacti_large2_coords)
+                        cacti[copy.copy(LARGE2)] = copy.copy(cacti_large2_coords)
                     else:
-                        cacti[key] = copy.copy(cacti_large3_coords)
+                        cacti[copy.copy(LARGE3)] = copy.copy(cacti_large3_coords)
                 cacti_count = 0
 
             point_count = point_count + 1
@@ -159,34 +159,25 @@ def main():
             if curr_score != 0 and curr_score % 100 == 0:
                 pygame.mixer.Sound.play(POINT_SOUND)
                 pygame.mixer.music.stop()
-                if multiplier != 2:
-                    multiplier = multiplier + 0.1
+                if multiplier != 1.05:
+                    multiplier = multiplier + 0.005
 
             pygame.display.set_icon(dino_sprite)
 
             for key, value in cacti.items():
-                value.x = value.x - 5*multiplier
+                value.x = value.x - (5*multiplier)
 
             for i in list(cacti.keys()):
-                if cacti[i].x <= -50:
+                if cacti[i].x <= -100:
                     del cacti[i]
 
-            floor_coords.x = floor_coords.x - 5*multiplier
+            floor_coords.x = floor_coords.x - (5*multiplier)
             if floor_coords.x <= -1200:
                 floor_coords.x = 0
 
             WIN.fill(WHITE)
 
             for key, value in cacti.items():
-                print('\n')
-                print(value.x)
-                print('\n')
-                print(value.y)
-                print('\n')
-                print(value.w)
-                print('\n')
-                print(value.w)
-                print('\n')
                 if dino_info.x+10 < value.x + value.w and dino_info.x+10 + dino_info.w-20 > value.x and dino_info.y+10 < value.y + value.h and dino_info.h-20 + dino_info.y+10 > value.y:
                     pygame.mixer.Sound.play(DIE_SOUND)
                     pygame.mixer.music.stop()
