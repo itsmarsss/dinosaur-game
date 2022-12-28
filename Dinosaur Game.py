@@ -72,6 +72,13 @@ def draw_window(dino, dino_coords, floor, floor_coords, obst, clouds):
 
 
 def main():
+    pygame.mixer.Sound.play(JUMP_SOUND)
+    pygame.mixer.music.stop()
+    pygame.mixer.Sound.play(POINT_SOUND)
+    pygame.mixer.music.stop()
+    pygame.mixer.Sound.play(DIE_SOUND)
+    pygame.mixer.music.stop()
+
     dead = False
     high_score = 0
     curr_score = 0
@@ -106,7 +113,7 @@ def main():
                 run = False
             elif event.type == pygame.MOUSEBUTTONUP:
                 x, y = pygame.mouse.get_pos()
-                if restart_coords.x < x and restart_coords.x + restart_coords.w > x and restart_coords.y < y and restart_coords.h + restart_coords.y > y:
+                if restart_coords.x < x < restart_coords.x + restart_coords.w and restart_coords.y < y < restart_coords.h + restart_coords.y:
                     obst.clear()
                     high_score = curr_score
                     curr_score = 0
@@ -152,8 +159,8 @@ def main():
 
             obst_count = obst_count + 1
             if obst_count >= random.randint(50, 100):
-                type = random.randint(0, 10)
-                if type <= 3:
+                obst_type = random.randint(0, 10)
+                if obst_type <= 3:
                     height = random.randint(0, 1)
                     if height == 0:
                         obst[copy.copy(BIRD1)] = copy.copy(bird_low_coords)
