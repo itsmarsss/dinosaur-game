@@ -34,7 +34,10 @@ RUN1 = pygame.transform.scale(RUN1, (RUN1.get_width() / 2, RUN1.get_height() / 2
 RUN2 = pygame.transform.scale(RUN2, (RUN2.get_width() / 2, RUN2.get_height() / 2))
 DUCK1 = pygame.transform.scale(DUCK1, (DUCK1.get_width() / 2, DUCK1.get_height() / 2))
 DUCK2 = pygame.transform.scale(DUCK2, (DUCK2.get_width() / 2, DUCK2.get_height() / 2))
+DEAD = pygame.transform.scale(DEAD, (DEAD.get_width() / 2, DEAD.get_height() / 2))
+
 GROUND = pygame.transform.scale(GROUND, (GROUND.get_width() / 2, GROUND.get_height() / 2))
+RESTART = pygame.transform.scale(RESTART, (RESTART.get_width() / 2, RESTART.get_height() / 2))
 
 SMALL1 = pygame.transform.scale(SMALL1, (SMALL1.get_width() / 2, SMALL1.get_height() / 2))
 SMALL2 = pygame.transform.scale(SMALL2, (SMALL2.get_width() / 2, SMALL2.get_height() / 2))
@@ -50,16 +53,16 @@ DIE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'die.wav'))
 
 
 def draw_window(dino, dino_coords, floor, floor_coords, cacti):
-    WIN.fill(WHITE)
     for key, value in cacti.items():
         WIN.blit(key, (value.x, value.y))
     WIN.blit(dino, (dino_coords.x, dino_coords.y))
-    WIN.blit(GROUND, (floor_coords.x, floor_coords.y))
-    WIN.blit(GROUND, (floor_coords.x + 1200, floor_coords.y))
+    WIN.blit(floor, (floor_coords.x, floor_coords.y))
+    WIN.blit(floor, (floor_coords.x + 1200, floor_coords.y))
     pygame.display.update()
 
 
 def main():
+    dead = False
     multiplier = 1
     high_score = 0
     curr_score = 0
@@ -73,8 +76,13 @@ def main():
     dino_coords = pygame.Rect(20, 145, RUN1.get_width(), RUN1.get_height())
     dino_duck_coords = pygame.Rect(20, 160, DUCK1.get_width(), DUCK1.get_height())
     floor_coords = pygame.Rect(0, 180, GROUND.get_width(), GROUND.get_height())
-    cacti_small_coords = pygame.Rect(650, 155, GROUND.get_width(), GROUND.get_height())
-    cacti_large_coords = pygame.Rect(650, 145, GROUND.get_width(), GROUND.get_height())
+    cacti_small1_coords = pygame.Rect(650, 155, SMALL1.get_width(), SMALL1.get_height())
+    cacti_small2_coords = pygame.Rect(650, 155, SMALL2.get_width(), SMALL2.get_height())
+    cacti_small3_coords = pygame.Rect(650, 155, SMALL3.get_width(), SMALL3.get_height())
+    cacti_large1_coords = pygame.Rect(650, 145, LARGE1.get_width(), LARGE1.get_height())
+    cacti_large2_coords = pygame.Rect(650, 145, LARGE2.get_width(), LARGE2.get_height())
+    cacti_large3_coords = pygame.Rect(650, 145, LARGE3.get_width(), LARGE3.get_height())
+    restart_coords = pygame.Rect(300-RESTART.get_width()/2, 100-RESTART.get_width()/2, RESTART.get_width(), RESTART.get_height())
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -82,87 +90,111 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            elif event.type == pygame.MOUSEBUTTONUP:
+                x, y = pygame.mouse.get_pos()
+                if restart_coords.x < x and restart_coords.x + restart_coords.w > x and restart_coords.y < y and restart_coords.h + restart_coords.y > y:
+                    cacti.clear()
+                    multiplier = 1
+                    high_score = curr_score
+                    curr_score = 0
+                    dead = False
+                    dino_coords.y = 145
 
-        keys_pressed = pygame.key.get_pressed()
-        if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]:
-            if dino_vel == 0:
-                pygame.mixer.Sound.play(JUMP_SOUND)
-                pygame.mixer.music.stop()
-                dino_vel = -15
+        if not dead:
+            keys_pressed = pygame.key.get_pressed()
+            if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]:
+                if dino_vel == 0:
+                    pygame.mixer.Sound.play(JUMP_SOUND)
+                    pygame.mixer.music.stop()
+                    dino_vel = -15
 
-        if dino_vel != 0:
-            dino_coords.y = 145 + dino_vel * time + 0.5 * grav_acc * time * time
-            if dino_coords.y >= 145:
-                dino_coords.y = 145
-                dino_vel = 0
-                time = 0
-            time = time + 0.5
-            if keys_pressed[pygame.K_DOWN]:
+            if dino_vel != 0:
+                dino_coords.y = 145 + dino_vel * time + 0.5 * grav_acc * time * time
+                if dino_coords.y >= 145:
+                    dino_coords.y = 145
+                    dino_vel = 0
+                    time = 0
                 time = time + 0.5
+                if keys_pressed[pygame.K_DOWN]:
+                    time = time + 0.5
 
-        dino_sprite = RUN1
-        dino_info = dino_coords
-        if keys_pressed[pygame.K_DOWN] and dino_coords.y == 145:
-            dino_sprite = DUCK2
-            dino_info = dino_duck_coords
-
-        dino_count = dino_count + 1
-        if dino_count <= FPS / 10:
-            dino_sprite = RUN2
+            dino_sprite = RUN1
+            dino_info = dino_coords
             if keys_pressed[pygame.K_DOWN] and dino_coords.y == 145:
                 dino_sprite = DUCK2
-        dino_count = dino_count % (FPS / 5)
+                dino_info = dino_duck_coords
 
-        cacti_count = cacti_count + 1
-        if cacti_count >= random.randint(50, 100):
-            key = SMALL1
-            size = random.randint(0, 1)
-            cact = random.randint(1, 3)
-            if size == 0:
-                if cact == 1:
-                    key = copy.copy(SMALL1)
-                elif cact == 2:
-                    key = copy.copy(SMALL2)
+            dino_count = dino_count + 1
+            if dino_count <= FPS / 10:
+                dino_sprite = RUN2
+                if keys_pressed[pygame.K_DOWN] and dino_coords.y == 145:
+                    dino_sprite = DUCK2
+            dino_count = dino_count % (FPS / 5)
+
+            cacti_count = cacti_count + 1
+            if cacti_count >= random.randint(50, 100):
+                size = random.randint(0, 1)
+                cact = random.randint(1, 3)
+                if size == 0:
+                    if cact == 1:
+                        cacti[key] = copy.copy(cacti_small1_coords)
+                    elif cact == 2:
+                        cacti[key] = copy.copy(cacti_small2_coords)
+                    else:
+                        cacti[key] = copy.copy(cacti_small3_coords)
                 else:
-                    key = copy.copy(SMALL3)
-            else:
-                if cact == 1:
-                    key = copy.copy(LARGE1)
-                elif cact == 2:
-                    key = copy.copy(LARGE2)
-                else:
-                    key = copy.copy(LARGE3)
-            cacti_count = 0
-            if size == 0:
-                cacti[key] = copy.copy(cacti_small_coords)
-            else:
-                cacti[key] = copy.copy(cacti_large_coords)
+                    if cact == 1:
+                        cacti[key] = copy.copy(cacti_large1_coords)
+                    elif cact == 2:
+                        cacti[key] = copy.copy(cacti_large2_coords)
+                    else:
+                        cacti[key] = copy.copy(cacti_large3_coords)
+                cacti_count = 0
 
-        point_count = point_count + 1
-        if point_count == 6:
-            curr_score = curr_score + 1
-            point_count = 0
+            point_count = point_count + 1
+            if point_count == 6:
+                curr_score = curr_score + 1
+                point_count = 0
 
-        if curr_score != 0 and curr_score % 100 == 0:
-            pygame.mixer.Sound.play(POINT_SOUND)
-            pygame.mixer.music.stop()
-            if multiplier != 2:
-                multiplier = multiplier + 0.1
+            if curr_score != 0 and curr_score % 100 == 0:
+                pygame.mixer.Sound.play(POINT_SOUND)
+                pygame.mixer.music.stop()
+                if multiplier != 2:
+                    multiplier = multiplier + 0.1
 
-        pygame.display.set_icon(dino_sprite)
+            pygame.display.set_icon(dino_sprite)
 
-        for key, value in cacti.items():
-            value.x = value.x - 5*multiplier
+            for key, value in cacti.items():
+                value.x = value.x - 5*multiplier
 
-        for i in list(cacti.keys()):
-            if cacti[i].x <= -50:
-                del cacti[i]
+            for i in list(cacti.keys()):
+                if cacti[i].x <= -50:
+                    del cacti[i]
 
-        floor_coords.x = floor_coords.x - 5*multiplier
-        if floor_coords.x <= -1200:
-            floor_coords.x = 0
+            floor_coords.x = floor_coords.x - 5*multiplier
+            if floor_coords.x <= -1200:
+                floor_coords.x = 0
 
-        draw_window(dino_sprite, dino_info, GROUND, floor_coords, cacti)
+            WIN.fill(WHITE)
+
+            for key, value in cacti.items():
+                print('\n')
+                print(value.x)
+                print('\n')
+                print(value.y)
+                print('\n')
+                print(value.w)
+                print('\n')
+                print(value.w)
+                print('\n')
+                if dino_info.x+10 < value.x + value.w and dino_info.x+10 + dino_info.w-20 > value.x and dino_info.y+10 < value.y + value.h and dino_info.h-20 + dino_info.y+10 > value.y:
+                    pygame.mixer.Sound.play(DIE_SOUND)
+                    pygame.mixer.music.stop()
+                    WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
+                    dino_sprite = DEAD
+                    dead = True
+
+            draw_window(dino_sprite, dino_info, GROUND, floor_coords, cacti)
 
     pygame.quit()
 
