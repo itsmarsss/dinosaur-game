@@ -122,7 +122,17 @@ def main():
 
         if not dead:
             keys_pressed = pygame.key.get_pressed()
-            if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]:
+            jump = keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]
+            duck = keys_pressed[pygame.K_DOWN]
+            for key, value in obst.items():
+                if value.x == 100:
+                    if dino_vel == 0:
+                        jump = True
+
+                if value.x <= 110 and value.y == 125:
+                    duck = True
+
+            if jump:
                 if dino_vel == 0:
                     pygame.mixer.Sound.play(JUMP_SOUND)
                     pygame.mixer.music.stop()
@@ -135,19 +145,19 @@ def main():
                     dino_vel = 0
                     time = 0
                 time = time + 0.5
-                if keys_pressed[pygame.K_DOWN]:
+                if duck:
                     time = time + 0.5
 
             dino_sprite = RUN1
             dino_info = dino_coords
-            if keys_pressed[pygame.K_DOWN] and dino_coords.y == 145:
+            if duck and dino_coords.y == 145:
                 dino_sprite = DUCK1
                 dino_info = dino_duck_coords
 
             dino_count = dino_count + 1
             if dino_count <= FPS / 10:
                 dino_sprite = RUN2
-                if keys_pressed[pygame.K_DOWN] and dino_coords.y == 145:
+                if duck and dino_coords.y == 145:
                     dino_sprite = DUCK2
             dino_count = dino_count % (FPS / 5)
 
@@ -205,12 +215,6 @@ def main():
 
             for key, value in obst.items():
                 value.x = value.x - 5
-                if value.x == 100:
-                    if dino_vel == 0:
-                        pygame.mixer.Sound.play(JUMP_SOUND)
-                        pygame.mixer.music.stop()
-                        dino_vel = -15
-                        print("j")
 
             for i in list(obst.keys()):
                 if obst[i].x <= -100:
