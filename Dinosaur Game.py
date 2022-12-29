@@ -127,31 +127,79 @@ def main():
             if event.type == pygame.MOUSEWHEEL:
                 scroll = event.y
                 if scroll > 0:
-                    volume = min(1.0, volume + 0.05)
+                    volume = min(1.0, volume + 0.01)
                 elif scroll < 0:
-                    volume = max(0.0, volume - 0.05)
+                    volume = max(0.0, volume - 0.01)
                 JUMP_SOUND.set_volume(volume)
                 DIE_SOUND.set_volume(volume)
                 POINT_SOUND.set_volume(volume)
 
+        keys_pressed = pygame.key.get_pressed()
+
+        if keys_pressed[pygame.K_a]:
+            prev_auto = True
+            if prev_auto:
+                auto_count = auto_count + 1
+        else:
+            auto_count = 0
+
+        if auto_count == 5:
+            auto = not auto
+
+        auto_count = auto_count % 30
+
+        WIN.fill(WHITE)
+
+        for key, value in obst.items():
+            if dino_info.x + 10 < value.x + value.w and dino_info.x + 10 + dino_info.w - 20 > value.x and dino_info.y + 10 < value.y + value.h and dino_info.h - 20 + dino_info.y + 10 > value.y:
+                if not dead:
+                    pygame.mixer.Sound.play(DIE_SOUND)
+                    pygame.mixer.music.stop()
+                game_over_text = FONT.render('G A M E  O V E R', True, CURR)
+                game_over_rect = game_over_text.get_rect()
+                game_over_rect.center = (300, 70)
+                WIN.blit(game_over_text, game_over_rect)
+                WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
+                dino_sprite = DEAD
+                dino_info = dino_coords
+                dead = True
+
+        if curr_score > 999999:
+            if not dead:
+                pygame.mixer.Sound.play(DIE_SOUND)
+                pygame.mixer.music.stop()
+            game_over_text = FONT.render('Y O U \' R E  T O O  G O O D', True, CURR)
+            game_over_rect = game_over_text.get_rect()
+            game_over_rect.center = (300, 70)
+            WIN.blit(game_over_text, game_over_rect)
+            WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
+            dino_sprite = DEAD
+            dino_info = dino_coords
+            dead = True
+
+        auto_text = FONT.render(f'[A] Auto Play: {str(auto)}', True, CURR if auto else HIGH)
+        volume_text = FONT.render(f'[Wheel] Volume: {str(int(volume * 100))}%', True, HIGH)
+        high_score_text = FONT.render(f'HI {str(high_score).zfill(6)}', True, HIGH)
+        curr_score_text = FONT.render(f'{str(curr_score).zfill(6)}', True, CURR)
+        auto_rect = auto_text.get_rect()
+        volume_rect = volume_text.get_rect()
+        high_rect = high_score_text.get_rect()
+        curr_rect = curr_score_text.get_rect()
+        auto_rect.topleft = (10, 10)
+        volume_rect.topleft = (10, 30)
+        curr_rect.topright = (590, 10)
+        high_rect.topright = (500, 10)
+
+        WIN.blit(auto_text, auto_rect)
+        WIN.blit(volume_text, volume_rect)
+        WIN.blit(curr_score_text, curr_rect)
+        WIN.blit(high_score_text, high_rect)
+
         if not dead:
-            keys_pressed = pygame.key.get_pressed()
             jump = keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]
             duck = keys_pressed[pygame.K_DOWN]
 
-            if keys_pressed[pygame.K_a]:
-                prev_auto = True
-                if prev_auto:
-                    auto_count = auto_count + 1
-            else:
-                auto_count = 0
-                prev_auto = False
 
-            if auto_count == 5:
-                auto = not auto
-                prev_auto = False
-
-            auto_count = auto_count % 30
 
             if auto:
                 for key, value in obst.items():
@@ -253,52 +301,7 @@ def main():
             if floor_coords.x <= -1200:
                 floor_coords.x = 0
 
-            WIN.fill(WHITE)
-
-            for key, value in obst.items():
-                if dino_info.x + 10 < value.x + value.w and dino_info.x + 10 + dino_info.w - 20 > value.x and dino_info.y + 10 < value.y + value.h and dino_info.h - 20 + dino_info.y + 10 > value.y:
-                    pygame.mixer.Sound.play(DIE_SOUND)
-                    pygame.mixer.music.stop()
-                    game_over_text = FONT.render('G A M E  O V E R', True, CURR)
-                    game_over_rect = game_over_text.get_rect()
-                    game_over_rect.center = (300, 70)
-                    WIN.blit(game_over_text, game_over_rect)
-                    WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
-                    dino_sprite = DEAD
-                    dino_info = dino_coords
-                    dead = True
-
-            if curr_score > 999999:
-                pygame.mixer.Sound.play(DIE_SOUND)
-                pygame.mixer.music.stop()
-                game_over_text = FONT.render('Y O U \' R E  T O O  G O O D', True, CURR)
-                game_over_rect = game_over_text.get_rect()
-                game_over_rect.center = (300, 70)
-                WIN.blit(game_over_text, game_over_rect)
-                WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
-                dino_sprite = DEAD
-                dino_info = dino_coords
-                dead = True
-
-            auto_text = FONT.render(f'[A] Auto Play: {str(auto)}', True, CURR if auto else HIGH)
-            volume_text = FONT.render(f'[Wheel] Volume: {str(int(volume*100))}%', True, HIGH)
-            high_score_text = FONT.render(f'HI {str(high_score).zfill(6)}', True, HIGH)
-            curr_score_text = FONT.render(f'{str(curr_score).zfill(6)}', True, CURR)
-            auto_rect = auto_text.get_rect()
-            volume_rect = volume_text.get_rect()
-            high_rect = high_score_text.get_rect()
-            curr_rect = curr_score_text.get_rect()
-            auto_rect.topleft = (10, 10)
-            volume_rect.topleft = (10, 30)
-            curr_rect.topright = (590, 10)
-            high_rect.topright = (500, 10)
-
-            WIN.blit(auto_text, auto_rect)
-            WIN.blit(volume_text, volume_rect)
-            WIN.blit(curr_score_text, curr_rect)
-            WIN.blit(high_score_text, high_rect)
-
-            draw_window(dino_sprite, dino_info, GROUND, floor_coords, obst, clouds)
+        draw_window(dino_sprite, dino_info, GROUND, floor_coords, obst, clouds)
 
     pygame.quit()
 
