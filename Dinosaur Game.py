@@ -134,8 +134,6 @@ def main():
                 DIE_SOUND.set_volume(volume)
                 POINT_SOUND.set_volume(volume)
 
-        WIN.fill(WHITE)
-
         keys_pressed = pygame.key.get_pressed()
 
         if keys_pressed[pygame.K_a]:
@@ -150,35 +148,20 @@ def main():
 
         auto_count = auto_count % 30
 
-        dino_sprite = RUN1
-        dino_info = dino_coords
+        WIN.fill(WHITE)
 
-        for key, value in obst.items():
-            if dino_info.x + 10 < value.x + value.w and dino_info.x + 10 + dino_info.w - 20 > value.x and dino_info.y + 10 < value.y + value.h and dino_info.h - 20 + dino_info.y + 10 > value.y:
-                if not dead:
-                    pygame.mixer.Sound.play(DIE_SOUND)
-                    pygame.mixer.music.stop()
-                game_over_text = FONT.render('G A M E  O V E R', True, CURR)
-                game_over_rect = game_over_text.get_rect()
-                game_over_rect.center = (300, 70)
-                WIN.blit(game_over_text, game_over_rect)
-                WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
-                dino_sprite = DEAD
-                dino_info = dino_coords
-                dead = True
-
-        if curr_score > 999999:
-            if not dead:
-                pygame.mixer.Sound.play(DIE_SOUND)
-                pygame.mixer.music.stop()
+        if curr_score >= 999999 and dead:
             game_over_text = FONT.render('Y O U \' R E  T O O  G O O D', True, CURR)
             game_over_rect = game_over_text.get_rect()
             game_over_rect.center = (300, 70)
             WIN.blit(game_over_text, game_over_rect)
             WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
-            dino_sprite = DEAD
-            dino_info = dino_coords
-            dead = True
+        elif dead:
+            game_over_text = FONT.render('G A M E  O V E R', True, CURR)
+            game_over_rect = game_over_text.get_rect()
+            game_over_rect.center = (300, 70)
+            WIN.blit(game_over_text, game_over_rect)
+            WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
 
         auto_text = FONT.render(f'[A] Auto Play: {str(auto)}', True, CURR if auto else HIGH)
         volume_text = FONT.render(f'[Wheel] Volume: {str(int(volume * 100))}%', True, HIGH)
@@ -226,6 +209,8 @@ def main():
                 if duck:
                     time = time + 0.5
 
+            dino_sprite = RUN1
+            dino_info = dino_coords
             if duck and dino_coords.y == 145:
                 dino_sprite = DUCK1
                 dino_info = dino_duck_coords
@@ -299,6 +284,31 @@ def main():
             floor_coords.x = floor_coords.x - 5
             if floor_coords.x <= -1200:
                 floor_coords.x = 0
+
+            for key, value in obst.items():
+                if dino_info.x + 10 < value.x + value.w and dino_info.x + 10 + dino_info.w - 20 > value.x and dino_info.y + 10 < value.y + value.h and dino_info.h - 20 + dino_info.y + 10 > value.y:
+                    pygame.mixer.Sound.play(DIE_SOUND)
+                    pygame.mixer.music.stop()
+                    game_over_text = FONT.render('G A M E  O V E R', True, CURR)
+                    game_over_rect = game_over_text.get_rect()
+                    game_over_rect.center = (300, 70)
+                    WIN.blit(game_over_text, game_over_rect)
+                    WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
+                    dino_sprite = DEAD
+                    dino_info = dino_coords
+                    dead = True
+
+            if curr_score >= 999999:
+                pygame.mixer.Sound.play(DIE_SOUND)
+                pygame.mixer.music.stop()
+                game_over_text = FONT.render('Y O U \' R E  T O O  G O O D', True, CURR)
+                game_over_rect = game_over_text.get_rect()
+                game_over_rect.center = (300, 70)
+                WIN.blit(game_over_text, game_over_rect)
+                WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
+                dino_sprite = DEAD
+                dino_info = dino_coords
+                dead = True
 
         draw_window(dino_sprite, dino_info, GROUND, floor_coords, obst, clouds)
 
