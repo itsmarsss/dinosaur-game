@@ -81,6 +81,7 @@ def main():
 
     auto = False
     dead = False
+    volume = 1
     high_score = 0
     curr_score = 0
     grav_acc = 1.6
@@ -93,7 +94,6 @@ def main():
     obst_count = 0
     cloud_count = 0
     auto_count = 0
-    prev_auto = False
     dino_coords = pygame.Rect(20, 145, RUN1.get_width(), RUN1.get_height())
     dino_duck_coords = pygame.Rect(20, 160, DUCK1.get_width(), DUCK1.get_height())
     floor_coords = pygame.Rect(0, 180, GROUND.get_width(), GROUND.get_height())
@@ -123,6 +123,13 @@ def main():
                     curr_score = 0
                     dead = False
                     dino_coords.y = 145
+
+            if event.type == pygame.MOUSEWHEEL:
+                scroll = event.y
+                if scroll > 0:
+                    volume = volume + 0.1
+                elif scroll < 0:
+                    volume = volume - 0.1
 
         if not dead:
             keys_pressed = pygame.key.get_pressed()
