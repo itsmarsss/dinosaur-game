@@ -114,11 +114,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            elif event.type == pygame.MOUSEBUTTONUP:
+
+            if event.type == pygame.MOUSEBUTTONUP and dead == True:
                 x, y = pygame.mouse.get_pos()
                 if restart_coords.x < x < restart_coords.x + restart_coords.w and restart_coords.y < y < restart_coords.h + restart_coords.y:
                     obst.clear()
-                    high_score = curr_score
+                    high_score = max(curr_score, high_score)
                     curr_score = 0
                     dead = False
                     dino_coords.y = 145
