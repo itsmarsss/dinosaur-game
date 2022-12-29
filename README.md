@@ -70,7 +70,7 @@ FONT = pygame.font.Font(os.path.abspath(os.path.join(bundle_dir, 'PressStart2P-R
 
 Make sure to use pyinstaller in the directory of all files  
 ```
-pyinstaller --add-data="run-1.png;." --add-data="run-2.png;." --add-data="bird-1.png;." --add-data="bird-2.png;." --add-data="cloud.png;." --add-data="dead.png;." --add-data="duck-1.png;." --add-data="duck-2.png;." --add-data="ground.png;." --add-data="large-1.png;." --add-data="large-2.png;." --add-data="large-3.png;." --add-data="small-1.png;." --add-data="small-2.png;." --add-data="small-3.png;." --add-data="restart.png;." --add-data="die.wav;." --add-data="point.wav;." --add-data="jump.wav;." --add-data="PressStart2P-Regular.ttf;." -i="icon.ico" --version-file="1.0.0" --noconsole --onefile "Dinosaur Game.py"
+pyinstaller --add-data="run-1.png;." --add-data="run-2.png;." --add-data="bird-1.png;." --add-data="bird-2.png;." --add-data="cloud.png;." --add-data="dead.png;." --add-data="duck-1.png;." --add-data="duck-2.png;." --add-data="ground.png;." --add-data="large-1.png;." --add-data="large-2.png;." --add-data="large-3.png;." --add-data="small-1.png;." --add-data="small-2.png;." --add-data="small-3.png;." --add-data="restart.png;." --add-data="die.mp3;." --add-data="point.mp3;." --add-data="jump.mp3;." --add-data="PressStart2P-Regular.ttf;." -i="icon.ico" --noconsole --onefile "Dinosaur Game.py"
 ```
 
 
