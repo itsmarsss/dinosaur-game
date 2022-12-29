@@ -65,9 +65,9 @@ def draw_window(dino, dino_coords, floor, floor_coords, obst, clouds):
         WIN.blit(key, (value.x, value.y))
     for key, value in clouds.items():
         WIN.blit(key, (value.x, value.y))
-    WIN.blit(dino, (dino_coords.x, dino_coords.y))
     WIN.blit(floor, (floor_coords.x, floor_coords.y))
     WIN.blit(floor, (floor_coords.x + 1200, floor_coords.y))
+    WIN.blit(dino, (dino_coords.x, dino_coords.y))
     pygame.display.update()
 
 
