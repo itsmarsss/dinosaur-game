@@ -256,7 +256,7 @@ def main():
                     dino_sprite = DEAD
                     dead = True
 
-            if curr_score > 100000:
+            if curr_score > 999999:
                 pygame.mixer.Sound.play(DIE_SOUND)
                 pygame.mixer.music.stop()
                 game_over_text = FONT.render('Y O U \' R E  T O O  G O O D', True, CURR)
@@ -267,7 +267,7 @@ def main():
                 dino_sprite = DEAD
                 dead = True
 
-            auto_text = FONT.render(f'Auto Play: {str(auto)}', True, CURR if auto else HIGH)
+            auto_text = FONT.render(f'[A]uto Play: {str(auto)}', True, CURR if auto else HIGH)
             high_score_text = FONT.render(f'HI {str(high_score).zfill(6)}', True, HIGH)
             curr_score_text = FONT.render(f'{str(curr_score).zfill(6)}', True, CURR)
             auto_rect = auto_text.get_rect()
