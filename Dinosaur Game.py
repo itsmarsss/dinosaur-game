@@ -265,6 +265,7 @@ def main():
                     WIN.blit(game_over_text, game_over_rect)
                     WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
                     dino_sprite = DEAD
+                    dino_info = dino_coords
                     dead = True
 
             if curr_score > 999999:
@@ -276,6 +277,7 @@ def main():
                 WIN.blit(game_over_text, game_over_rect)
                 WIN.blit(RESTART, (restart_coords.x, restart_coords.y))
                 dino_sprite = DEAD
+                dino_info = dino_coords
                 dead = True
 
             auto_text = FONT.render(f'[A] Auto Play: {str(auto)}', True, CURR if auto else HIGH)
