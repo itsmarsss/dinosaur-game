@@ -79,6 +79,7 @@ def main():
     pygame.mixer.Sound.play(DIE_SOUND)
     pygame.mixer.music.stop()
 
+    auto = False
     dead = False
     high_score = 0
     curr_score = 0
@@ -124,13 +125,16 @@ def main():
             keys_pressed = pygame.key.get_pressed()
             jump = keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]
             duck = keys_pressed[pygame.K_DOWN]
-            for key, value in obst.items():
-                if value.x == 100:
-                    if dino_vel == 0:
-                        jump = True
 
-                if value.x <= 110 and value.y == 125:
-                    duck = True
+            auto = keys_pressed[pygame.K_a]
+
+            if auto:
+                for key, value in obst.items():
+                    if value.x <= 100 and value.y == 125:
+                        duck = True
+                    elif value.x == 100:
+                        if dino_vel == 0:
+                            jump = True
 
             if jump:
                 if dino_vel == 0:
@@ -249,13 +253,17 @@ def main():
                 dino_sprite = DEAD
                 dead = True
 
+            auto_text = FONT.render(f'Auto Play: {str(auto)}', True, CURR if auto else HIGH)
             high_score_text = FONT.render(f'HI {str(high_score).zfill(6)}', True, HIGH)
             curr_score_text = FONT.render(f'{str(curr_score).zfill(6)}', True, CURR)
+            auto_rect = auto_text.get_rect()
             high_rect = high_score_text.get_rect()
             curr_rect = curr_score_text.get_rect()
+            auto_rect.topleft = (10, 10)
             curr_rect.topright = (590, 10)
             high_rect.topright = (500, 10)
 
+            WIN.blit(auto_text, auto_rect)
             WIN.blit(curr_score_text, curr_rect)
             WIN.blit(high_score_text, high_rect)
 
