@@ -83,7 +83,7 @@ If you're a lazy bum like me, head over to [[releases]](https://github.com/itsma
 Dino Jumps
 #### [down key]
 Dino ducks or falls faster
-#### [hold a key]
+#### hold [A key]
 Toggle autoplay
 <!--
 ## Video (Shameless self promo)
