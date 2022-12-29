@@ -205,6 +205,12 @@ def main():
 
             for key, value in obst.items():
                 value.x = value.x - 5
+                if value.x == 100:
+                    if dino_vel == 0:
+                        pygame.mixer.Sound.play(JUMP_SOUND)
+                        pygame.mixer.music.stop()
+                        dino_vel = -15
+                        print("j")
 
             for i in list(obst.keys()):
                 if obst[i].x <= -100:
