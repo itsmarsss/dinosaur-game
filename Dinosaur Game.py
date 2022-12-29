@@ -92,6 +92,8 @@ def main():
     point_count = 0
     obst_count = 0
     cloud_count = 0
+    auto_count = 0
+    prev_auto = False
     dino_coords = pygame.Rect(20, 145, RUN1.get_width(), RUN1.get_height())
     dino_duck_coords = pygame.Rect(20, 160, DUCK1.get_width(), DUCK1.get_height())
     floor_coords = pygame.Rect(0, 180, GROUND.get_width(), GROUND.get_height())
@@ -126,13 +128,25 @@ def main():
             jump = keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]
             duck = keys_pressed[pygame.K_DOWN]
 
-            auto = keys_pressed[pygame.K_a]
+            if keys_pressed[pygame.K_a]:
+                prev_auto = True
+                if prev_auto:
+                    auto_count = auto_count + 1
+            else:
+                auto_count = 0
+                prev_auto = False
+
+            if auto_count == 5:
+                auto = not auto
+                prev_auto = False
+
+            auto_count = auto_count % 30
 
             if auto:
                 for key, value in obst.items():
                     if value.x <= 100 and value.y == 125:
                         duck = True
-                    elif value.x == 100:
+                    elif 100 >= value.x >= 50:
                         if dino_vel == 0:
                             jump = True
 
