@@ -20,6 +20,11 @@ You can run it in an IDE or build it into an executable, up to you.
 #### Build Project
 Make sure to move everything out of `assets` folder.
 
+Make sure to 
+```py
+import sys
+```
+
 Make sure to update line `17` to `60` to the following:  
 ```py
 bundle_dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
