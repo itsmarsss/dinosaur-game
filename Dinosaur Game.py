@@ -141,7 +141,7 @@ def main():
             dino_sprite = RUN1
             dino_info = dino_coords
             if keys_pressed[pygame.K_DOWN] and dino_coords.y == 145:
-                dino_sprite = DUCK2
+                dino_sprite = DUCK1
                 dino_info = dino_duck_coords
 
             dino_count = dino_count + 1
