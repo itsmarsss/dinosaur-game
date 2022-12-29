@@ -61,9 +61,9 @@ LARGE1 = pygame.transform.scale(LARGE1, (LARGE1.get_width() / 2, LARGE1.get_heig
 LARGE2 = pygame.transform.scale(LARGE2, (LARGE2.get_width() / 2, LARGE2.get_height() / 2))
 LARGE3 = pygame.transform.scale(LARGE3, (LARGE3.get_width() / 2, LARGE3.get_height() / 2))
 
-JUMP_SOUND = pygame.mixer.Sound(os.path.abspath(os.path.join(bundle_dir, 'jump.wav')))
-POINT_SOUND = pygame.mixer.Sound(os.path.abspath(os.path.join(bundle_dir, 'point.wav')))
-DIE_SOUND = pygame.mixer.Sound(os.path.abspath(os.path.join(bundle_dir, 'die.wav')))
+JUMP_SOUND = pygame.mixer.Sound(os.path.abspath(os.path.join(bundle_dir, 'jump.mp3')))
+POINT_SOUND = pygame.mixer.Sound(os.path.abspath(os.path.join(bundle_dir, 'point.mp3')))
+DIE_SOUND = pygame.mixer.Sound(os.path.abspath(os.path.join(bundle_dir, 'die.mp3')))
 
 FONT = pygame.font.Font(os.path.abspath(os.path.join(bundle_dir, 'PressStart2P-Regular.ttf')), 12)
 ```
@@ -85,6 +85,8 @@ Dino Jumps
 Dino ducks or falls faster
 #### hold [A key]
 Toggle autoplay
+#### scroll [wheel]
+Increase/Decrease volume
 <!--
 ## Video (Shameless self promo)
 [![Image Link](https://raw.githubusercontent.com/itsmarsss/AutoFlappy/main/assets/thumbnail.jpg)](https://www.youtube.com/watch?v=-sUVFuqVBdU)
