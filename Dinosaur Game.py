@@ -53,9 +53,9 @@ LARGE1 = pygame.transform.scale(LARGE1, (LARGE1.get_width() / 2, LARGE1.get_heig
 LARGE2 = pygame.transform.scale(LARGE2, (LARGE2.get_width() / 2, LARGE2.get_height() / 2))
 LARGE3 = pygame.transform.scale(LARGE3, (LARGE3.get_width() / 2, LARGE3.get_height() / 2))
 
-JUMP_SOUND = pygame.mixer.Sound(os.path.join('assets', 'jump.wav'))
-POINT_SOUND = pygame.mixer.Sound(os.path.join('assets', 'point.wav'))
-DIE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'die.wav'))
+JUMP_SOUND = pygame.mixer.Sound(os.path.join('assets', 'jump.mp3'))
+POINT_SOUND = pygame.mixer.Sound(os.path.join('assets', 'point.mp3'))
+DIE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'die.mp3'))
 
 FONT = pygame.font.Font(os.path.join('assets', 'PressStart2P-Regular.ttf'), 12)
 
@@ -127,9 +127,12 @@ def main():
             if event.type == pygame.MOUSEWHEEL:
                 scroll = event.y
                 if scroll > 0:
-                    volume = volume + 0.1
+                    volume = min(1.0, volume + 0.05)
                 elif scroll < 0:
-                    volume = volume - 0.1
+                    volume = max(0.0, volume - 0.05)
+                JUMP_SOUND.set_volume(volume)
+                DIE_SOUND.set_volume(volume)
+                POINT_SOUND.set_volume(volume)
 
         if not dead:
             keys_pressed = pygame.key.get_pressed()
@@ -189,7 +192,7 @@ def main():
 
             cloud_count = cloud_count + 1
             if cloud_count >= random.randint(100, 150):
-                cloud_box = pygame.Rect(650, random.randint(30, 50), CLOUD.get_width(), CLOUD.get_height())
+                cloud_box = pygame.Rect(650, random.randint(40, 60), CLOUD.get_width(), CLOUD.get_height())
                 clouds[copy.copy(CLOUD)] = cloud_box
                 cloud_count = 0
 
@@ -275,17 +278,21 @@ def main():
                 dino_sprite = DEAD
                 dead = True
 
-            auto_text = FONT.render(f'[A]uto Play: {str(auto)}', True, CURR if auto else HIGH)
+            auto_text = FONT.render(f'[A] Auto Play: {str(auto)}', True, CURR if auto else HIGH)
+            volume_text = FONT.render(f'[Wheel] Volume: {str(int(volume*100))}%', True, HIGH)
             high_score_text = FONT.render(f'HI {str(high_score).zfill(6)}', True, HIGH)
             curr_score_text = FONT.render(f'{str(curr_score).zfill(6)}', True, CURR)
             auto_rect = auto_text.get_rect()
+            volume_rect = volume_text.get_rect()
             high_rect = high_score_text.get_rect()
             curr_rect = curr_score_text.get_rect()
             auto_rect.topleft = (10, 10)
+            volume_rect.topleft = (10, 30)
             curr_rect.topright = (590, 10)
             high_rect.topright = (500, 10)
 
             WIN.blit(auto_text, auto_rect)
+            WIN.blit(volume_text, volume_rect)
             WIN.blit(curr_score_text, curr_rect)
             WIN.blit(high_score_text, high_rect)
 
