@@ -8,8 +8,8 @@ DinosaurGame
 ## NOTICE
 > :warning: :warning: :warning: **WARNING:** This project is no longer maintained; there may be bugs. Feel free to fork this repository, pull requests *may* be accepted. :warning: :warning: :warning:
 
-## What is Dinosaur Game
-Dinosaur Game is a parody of Chrome's hidden Dinosaur game. DinosaurGame will provide a similar experience, but you can turn on autoplay whenever you desire.
+## What is DinosaurGame
+DinosaurGame is a parody of Chrome's hidden Dinosaur game. DinosaurGame will provide a similar experience, but you can turn on autoplay whenever you desire.
 
 ## Download
 ### Cloning
