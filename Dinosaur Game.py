@@ -115,7 +115,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            if event.type == pygame.MOUSEBUTTONUP and dead == True:
+            if event.type == pygame.MOUSEBUTTONUP and dead:
                 x, y = pygame.mouse.get_pos()
                 if restart_coords.x < x < restart_coords.x + restart_coords.w and restart_coords.y < y < restart_coords.h + restart_coords.y:
                     obst.clear()
@@ -134,6 +134,8 @@ def main():
                 DIE_SOUND.set_volume(volume)
                 POINT_SOUND.set_volume(volume)
 
+        WIN.fill(WHITE)
+
         keys_pressed = pygame.key.get_pressed()
 
         if keys_pressed[pygame.K_a]:
@@ -148,7 +150,8 @@ def main():
 
         auto_count = auto_count % 30
 
-        WIN.fill(WHITE)
+        dino_sprite = RUN1
+        dino_info = dino_coords
 
         for key, value in obst.items():
             if dino_info.x + 10 < value.x + value.w and dino_info.x + 10 + dino_info.w - 20 > value.x and dino_info.y + 10 < value.y + value.h and dino_info.h - 20 + dino_info.y + 10 > value.y:
@@ -199,8 +202,6 @@ def main():
             jump = keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_SPACE]
             duck = keys_pressed[pygame.K_DOWN]
 
-
-
             if auto:
                 for key, value in obst.items():
                     if value.x <= 100 and value.y == 125:
@@ -225,8 +226,6 @@ def main():
                 if duck:
                     time = time + 0.5
 
-            dino_sprite = RUN1
-            dino_info = dino_coords
             if duck and dino_coords.y == 145:
                 dino_sprite = DUCK1
                 dino_info = dino_duck_coords
