@@ -94,4 +94,6 @@ Toggle autoplay
 Increase/Decrease volume
 
 ## Video
+<p align="center">Making of the program: https://www.youtube.com/watch?v=Skjqo79CroU</p>
+
 [![Image Link](https://img.youtube.com/vi/Skjqo79CroU/maxresdefault.jpg)](https://www.youtube.com/watch?v=Skjqo79CroU)
