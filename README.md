@@ -92,7 +92,6 @@ Dino ducks or falls faster
 Toggle autoplay
 #### scroll [wheel]
 Increase/Decrease volume
-<!--
-## Video (Shameless self promo)
-[![Image Link](https://raw.githubusercontent.com/itsmarsss/AutoFlappy/main/assets/thumbnail.jpg)](https://www.youtube.com/watch?v=-sUVFuqVBdU)
--->
+
+## Video
+[![Image Link](https://i.ytimg.com/vi/Skjqo79CroU/mqdefault.jpg)](https://www.youtube.com/watch?v=Skjqo79CroU)
