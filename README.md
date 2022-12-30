@@ -94,4 +94,4 @@ Toggle autoplay
 Increase/Decrease volume
 
 ## Video
-[![Image Link](https://i.ytimg.com/vi/Skjqo79CroU/mqdefault.jpg)](https://www.youtube.com/watch?v=Skjqo79CroU)
+[![Image Link](https://img.youtube.com/vi/Skjqo79CroU/maxresdefault.jpg)](https://www.youtube.com/watch?v=Skjqo79CroU)
